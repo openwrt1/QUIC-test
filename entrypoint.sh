@@ -6,6 +6,5 @@ echo "0 3 * * * kill 1" > /etc/crontabs/root
 # 后台启动 Alpine 内置的 cron 守护进程
 crond
 
-# 使用 exec 启动 socat，使其接管 PID 1。这能确保它能正常收到退出信号
-# 添加了 -d -d -d 参数来输出连接和断开的详细日志
-exec socat -d -d -d -T 1800 UDP4-LISTEN:23112,fork,reuseaddr UDP4:162.159.198.1:443
+# 使用单 -d 参数，仅输出连接提醒（Notice级别），不输出数据收发日志，既轻量又能看到谁连进来了
+exec socat -d -T 1800 UDP4-LISTEN:23112,fork,reuseaddr UDP4:162.159.198.1:443

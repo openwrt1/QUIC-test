@@ -2,10 +2,17 @@
 FROM alpine:latest
 
 # 安装 socat
-RUN apk add --no-cache socat
+RUN apk add --no-cache socat tzdata
+
+# 设置时区为上海，方便查看正确的日志时间
+ENV TZ=Asia/Shanghai
 
 # 暴露你的服务端口 (可以根据需要修改)
 EXPOSE 23112/udp
 
+# 将启动脚本复制到镜像中并赋予执行权限
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # 默认运行命令，将本地 23112 的 UDP 流量转发到 Cloudflare MASQUE 的 443 端口
-CMD ["socat", "UDP4-LISTEN:23112,fork,reuseaddr", "UDP4:162.159.198.1:443"]
+CMD ["/entrypoint.sh"]

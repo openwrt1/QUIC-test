@@ -1,9 +1,11 @@
-FROM python:3.11-slim
+# 使用超轻量的 alpine 作为基础镜像
+FROM alpine:latest
 
-WORKDIR /app
+# 安装 socat
+RUN apk add --no-cache socat
 
-COPY udp_echo.py .
-
+# 暴露你的服务端口 (可以根据需要修改)
 EXPOSE 23112/udp
 
-CMD ["python", "udp_echo.py"]
+# 默认运行命令，将本地 23112 的 UDP 流量转发到 Cloudflare MASQUE 的 443 端口
+CMD ["socat", "UDP4-LISTEN:23112,fork,reuseaddr", "UDP4:162.159.198.1:443"]

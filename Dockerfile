@@ -4,4 +4,6 @@ WORKDIR /app
 
 COPY udp_echo.py .
 
+EXPOSE 23112/udp
+
 CMD ["python", "udp_echo.py"]
